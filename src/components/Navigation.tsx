@@ -5,16 +5,21 @@ import {
   Apple, 
   Heart, 
   TrendingUp, 
-  Target 
+  Target,
+  LogIn,
+  UserPlus,
+  User
 } from 'lucide-react';
 
 interface NavigationProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
+  isAuthenticated: boolean;
+  username: string | null;
 }
 
-const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
-  const tabs = [
+const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange, isAuthenticated, username }) => {
+  const commonTabs = [
     { id: 'dashboard', label: 'Dashboard', icon: Home },
     { id: 'workouts', label: 'Workouts', icon: Dumbbell },
     { id: 'nutrition', label: 'Nutrition', icon: Apple },
@@ -23,10 +28,20 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
     { id: 'goals', label: 'Goals', icon: Target },
   ];
 
+  const authTabs = isAuthenticated
+    ? [{ id: 'profile', label: username ? username : 'Profile', icon: User }]
+    : [
+        { id: 'login', label: 'Login', icon: LogIn },
+        { id: 'register', label: 'Register', icon: UserPlus },
+      ];
+
+  const tabs = [...commonTabs, ...authTabs];
+
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
+          {/* Logo */}
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center">
               <Heart className="w-5 h-5 text-white" />
@@ -34,6 +49,7 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
             <h1 className="text-xl font-bold text-gray-900">FitTracker</h1>
           </div>
           
+          {/* Desktop Navigation */}
           <div className="hidden md:flex space-x-1">
             {tabs.map((tab) => {
               const Icon = tab.icon;
